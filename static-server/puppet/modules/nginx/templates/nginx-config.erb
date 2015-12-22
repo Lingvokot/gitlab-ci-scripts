@@ -21,8 +21,8 @@ server {
 		index index.html index.htm;
 		autoindex on;
 
-		auth_basic "Lingvokot";
-		auth_basic_user_file "/etc/nginx/nginx-passwords";
+		auth_basic "<%= @basic_auth_hint %>";
+		auth_basic_user_file "<%= @nginx_password_file_path %>";
 
 		location ~* ((badge_maintainability\.svg)|(badge_tests\.svg)|(badge_coverage\.svg))$ {
 			auth_basic off;

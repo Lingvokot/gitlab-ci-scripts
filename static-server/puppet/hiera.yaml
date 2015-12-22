@@ -1,0 +1,15 @@
+---
+:backends:
+  - yaml
+  - eyaml
+:logger: puppet
+:yaml:
+  :datadir: "puppet/"
+:eyaml:
+  :datadir: "puppet/"
+  pkcs7_private_key: '/etc/puppet/keys/eyaml/private_key.pkcs7.pem'
+  pkcs7_public_key: '/etc/puppet/keys/eyaml/public_key.pkcs7.pem'
+
+:hierarchy:
+  - secure
+  - config

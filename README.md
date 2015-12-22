@@ -1,110 +1,55 @@
 # Gitlab CI assets dir
 
-# Установка
+Contains our assets dir for Gitlab CI
 
-см. скрипт __provision.sh__
+## Runner provision
 
-# Настройка
+TODO. For now, it's in the `provision.sh` script
 
-## Сборка покрытия в билдах Gitlab CI для istanbul / isparta
+## Static server
 
-Настройки репозитория –> CI Settings.
-Там под *Project settings* внутри *Test coverage parsing*:
-```
-Lines\s*:\s*(\d*\.?\d+)%
-```
-Эта рега схватит в первую группу процент покрытия по линиям среди вывода *istanbul*:
-```
-=============================== Coverage summary ===============================
-Statements   : 83.33% ( 5/6 )
-Branches     : 50% ( 2/4 )
-Functions    : 100% ( 0/0 )
-Lines        : 83.33% ( 5/6 )
-================================================================================
-```
+We use it as "Gitlab CI extension" for our *JavaScript* projects (*React Native*).
 
-### Ошибка при понижении покрытия
+Info is in the `static-server` directory (puppet manifests and install shell script)
 
-Можно вывести ошибку, если покрытие меньше определённого процента, или не покрыто N чего-то через `istanbul check`
+With help of `build-export.sh`, it's possible to:
+  * generate custom badges via web service http://shields.io
+  * always have link on latest build
+  * copy your build artifacts to directory exposed into WEB by nginx!
 
-Пример для 90% покрытий для линий:
+We use HTTP basic auth for access control. But badges are public-visible by default.
+
+Old builds get removed from builds dir by cron after they stay __7 days__.
+See main manifest `init.pp` for more info.
+
+### Install
+
+We use *Ubuntu Server 14.04 LTS* distro for the server.
+You may need your pem keys (`private_key.pkcs7.pem`, `public_key.pkcs7.pem`) to get secure variables.
+
+Steps to setup:
+* Place your keys for hiera-eyaml in paths:
+  * `pkcs7_private_key`: `/etc/puppet/keys/eyaml/private_key.pkcs7.pem`
+  * `pkcs7_public_key`: `/etc/puppet/keys/eyaml/public_key.pkcs7.pem`
+* Run `install.sh` script. It should automatically install their dependencies.
+
+### Unrelated notes on Gitlab CI setup
+
+Get coverage info display in Gitlab CI build log using *istanbul* as coverage tool:
+1. Goto Project settings
+2. Find *Continuous Integration* section.
+3. Enter this REGexp to *Test coverage parsing* entry: `Lines\s*:\s*(\d*\.?\d+)%`
+Now Gitlab CI will display covered lines percent:
+[IMAGE HERE]
+
+
+To enforce coverage percent, consult your coverage program.
+We use *istanbul* (and *isparta*), so we can check coverage with command `istanbul check`
+
+An example for 90% lines covered:
 ```
 istanbul check --lines 90
 ```
 
-## Стиль кода
-
-Настраивается через *.eslintrc*. Нужно поставить нужным правилам *1*, тогда при их несоблюдении билд будет падать.
-
-# логи сборок в nginx
-
-Находятся в */opt/gitlab-ci-builds/*
-
-Для экспорта запустите *build-export.sh* с аргументами:
-1. Build ID
-2. Build dir
-
-Для копирования используется *rsync*
-
-И след. переменными окружения:
-* `BUILD_EXPORT_HOST=127.0.0.1` хост со статикой, куда будет экспортировано
-* `BUILD_EXPORT_USER=root` пользователь
-
-> При использовании удалённого хоста убедитесь, что *rsync* не спросит пароль (*ssh-agent*, *ssh keys*)
-
-Получится в итоге */opt/gitlab-ci-builds/%BUILD_ID%/%BUILD_DIR%*
-
-Пример:
-```
-$ BUILD_EXPORT_HOST=8.8.8.8 BUILD_EXPORT_USER=root build-export.sh 3h41g3 /home/gitlab-ci/builds/jhthgecx/
-Copying /home/gitlab-ci/builds/3h41g3 to ...
-...
-...
-See your build at http://8.8.8.8/builds/3h41g3/ !
-```
-
-## Установка
-
-### nginx
-см. __static-provision.sh__.
-конфиг *nginx* - __nginx-config__, пароли: __nginx-passwords__
-
-### cron: удаление старых билдов
-`crontab -e`. туда:
-```
-0 0 * * 0   find /opt/gitlab-ci-builds/ -type d -mtime +7 -maxdepth 1 -exec rm -r {} \;
-```
-
-### бейджи
-
-Сделаны через *PHP* скрипт __badge.php__.
-Использование через *HTTP*:
-* `badge.php?project=MY_PROJ` для вывода бейджа
-* `badge.php?project=MY_PROJ&action=set&coverage=40` для установки покрытия в 40%:
-
-#### Пример установки для istanbul
-```sh
-COVERAGE=`./node_modules/.bin/istanbul report text-summary | grep "Lines" | grep -oE "(([0-9]+.)?[0-9]+)%" | sed 's/%//'`
-curl 127.0.0.1/badge.php?project=MY_PROJ&action=set&coverage=$COVERAGE
-```
-
-#### выгрузка покрытия через badge.php
-
-см. __export-coverage.sh__
-
-Переменные окружения:
-* `COVERAGE_EXPORT_SCRIPT` хост и путь до *badge.php*
-
-пример использования:
-```
-COVERAGE_EXPORT_SCRIPT_REMOTE=127.0.0.1/scripts/badge.php export-coverage.sh jhthgecx/buildr3r/ my-awesome-gitlab-ci-project
-...
-<curl to 127.0.0.1/scripts/badge.php?project=MY_PROJ&action=set&coverage=40>
-```
-
-##### возможно, потребуется самому создать и настроить права к файлу
-
-```
-touch /opt/gitlab-ci-builds/scripts/badge__info.json
-chown www-data:www-data /opt/gitlab-ci-builds/scripts/badge__info.json
-```
+To enforce code style on your build server, use linter.
+We use `1` option for some rules in our *.eslintrc*.
