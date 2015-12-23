@@ -64,8 +64,8 @@ Get coverage info display in Gitlab CI build log using *istanbul* as coverage to
 2. Find *Continuous Integration* section.
 3. Enter this REGexp to *Test coverage parsing* entry: `Lines\s*:\s*(\d*\.?\d+)%`
 Now Gitlab CI will display covered lines percent:
-[IMAGE HERE]
 
+![Istanbul coverage gitlab](assets/istanbul-coverage.png)
 
 To enforce coverage percent, consult your coverage program.
 We use *istanbul* (and *isparta*), so we can check coverage with command `istanbul check`
