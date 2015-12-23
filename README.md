@@ -10,8 +10,6 @@ TODO. For now, it's in the `provision.sh` script
 
 We use it as "Gitlab CI extension" for our *JavaScript* projects (*React Native*).
 
-Info is in the `static-server` directory (puppet manifests and install shell script)
-
 With help of `build-export.sh`, it's possible to:
   * generate custom badges via web service http://shields.io
   * always have link on latest build
