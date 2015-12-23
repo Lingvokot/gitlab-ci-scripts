@@ -1,10 +1,10 @@
 #!/bin/sh
 
-############################
+###################################
 ### Installs puppet,
-###   provisions a server
-###     with puppet manifes
-##############################
+###   checks for eyaml installation
+###     executes puppet manifest
+###################################
 
 # Change working dir to current
 cd "$(dirname "$0")"
@@ -34,7 +34,7 @@ function check_deps {
 
 function apply-manifest {
   # Execute our manifest
-  puppet apply --verbose --debug --hiera_config ./puppet/hiera.yaml --modulepath ./puppet/modules ./puppet/$1.pp
+  puppet apply --verbose --debug --hiera_config ./puppet/hiera.yaml --modulepath ./puppet/modules ./puppet/manifests/$1.pp
 }
 
 # Entry point
@@ -47,5 +47,5 @@ function main {
 if [ -n "$1" ]; then
   main $1
 else
-  echo "Usage: install.sh init"
+  echo -n "Manifest install script\nUsage: install.sh manifest\nSee manifests dir to find manifests\n"
 fi
