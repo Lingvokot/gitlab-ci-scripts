@@ -2,11 +2,43 @@
 
 Contains our assets dir for Gitlab CI
 
-## Runner provision
+Manifests get installed with `install.sh` script.
 
-TODO. For now, it's in the `provision.sh` script
+Example:
+```
+install.sh android-build
+```
 
-## Static server
+## Pre-install steps and additional info
+
+We use *Ubuntu Server 14.04 LTS* distro for the server.
+You may need your pem keys (`private_key.pkcs7.pem`, `public_key.pkcs7.pem`) to get secure variables.
+
+Steps to setup:
+* Place your keys for hiera-eyaml in paths:
+  * `pkcs7_private_key`: `/etc/puppet/keys/eyaml/private_key.pkcs7.pem`
+  * `pkcs7_public_key`: `/etc/puppet/keys/eyaml/public_key.pkcs7.pem`
+* Run `install.sh` script. It should automatically install their dependencies.
+
+## Installation
+
+### Runner provision
+
+Included in the `gitlab-runner` manifest:
+```
+install.sh gitlab-runner
+```
+
+#### Android build server
+
+Combined with Gitlab CI Runner setup.
+
+Installation is done via `android-build` manifest:
+```
+install.sh android-build
+```
+
+### Static server
 
 We use it as "Gitlab CI extension" for our *JavaScript* projects (*React Native*).
 
@@ -18,20 +50,14 @@ With help of `build-export.sh`, it's possible to:
 We use HTTP basic auth for access control. But badges are public-visible by default.
 
 Old builds get removed from builds dir by cron after they stay __7 days__.
-See main manifest `init.pp` for more info.
+See main manifest (`static-server`) for more info.
 
-### Install
+Installation is done via `static-server` manifest:
+```
+install.sh static-server
+```
 
-We use *Ubuntu Server 14.04 LTS* distro for the server.
-You may need your pem keys (`private_key.pkcs7.pem`, `public_key.pkcs7.pem`) to get secure variables.
-
-Steps to setup:
-* Place your keys for hiera-eyaml in paths:
-  * `pkcs7_private_key`: `/etc/puppet/keys/eyaml/private_key.pkcs7.pem`
-  * `pkcs7_public_key`: `/etc/puppet/keys/eyaml/public_key.pkcs7.pem`
-* Run `install.sh` script. It should automatically install their dependencies.
-
-### Unrelated notes on Gitlab CI setup
+#### Unrelated notes on Gitlab CI setup
 
 Get coverage info display in Gitlab CI build log using *istanbul* as coverage tool:
 1. Goto Project settings
