@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+#^syntax detection
+
+forge "https://forgeapi.puppetlabs.com"
+
+# All modules are from the Puppet Forge
+mod "puppetlabs-stdlib"
+mod "puppetlabs-apt"
+mod "maestrodev-android"

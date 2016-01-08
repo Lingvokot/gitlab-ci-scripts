@@ -1,16 +1,16 @@
-## android-build manifest
-# install gitlab-runner
-#         fastlane
-#         java (jdk)
-#         android-sdk
+# Installs android build server and gitlab runner
 
-class { 'gitlab-runner':
-    token => hiera('gitlab-runner::token'),
-    description => hiera('gitlab-runner::description'),
+class { 'gitlab_runner':
+    token => hiera('gitlab_runner::token'),
+    description => hiera('gitlab_runner::description'),
 }
 
-class { 'java': }
+class { 'jdk':
 
-class { 'android': }
+}
 
-class { 'fastlane': }
+include android
+
+class { 'fastlane':
+
+}
