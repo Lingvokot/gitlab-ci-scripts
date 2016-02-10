@@ -36,7 +36,7 @@ check_deps () {
   if [[ ! "$(ruby -v)" == *"ruby 2.2"* ]]; then
     echo "Installing ruby version 2.2 ..."
     apt-get install -y software-properties-common >/dev/null
-    apt-add-repository ppa:brightbox/ruby-ng >/dev/null 2>&1
+    apt-add-repository -y ppa:brightbox/ruby-ng >/dev/null 2>&1
     apt-get update  >/dev/null
     apt-get install -qq -y ruby2.2 ruby2.2-dev ruby-switch >/dev/null
     echo "Switch system ruby version to 2.2"
