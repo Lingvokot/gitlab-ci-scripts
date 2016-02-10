@@ -33,7 +33,7 @@ prepare_puppet () {
 check_deps () {
 
   # Ruby 2.2dev needed by fastlane
-  if [[ ! "$(ruby -v)" == *"ruby 2.2"* ]]; then
+  if ! which ruby > /dev/null 2>&1 || [[ ! "$(ruby -v)" == *"ruby 2.2"* ]]; then
     echo "Installing ruby version 2.2 ..."
     apt-get install -y software-properties-common >/dev/null
     apt-add-repository -y ppa:brightbox/ruby-ng >/dev/null 2>&1
