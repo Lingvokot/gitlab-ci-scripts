@@ -20,6 +20,14 @@ Steps to setup:
   * `pkcs7_public_key`: `/etc/puppet/keys/eyaml/public_key.pkcs7.pem`
 * Run `install.sh` script. It should automatically install their dependencies.
 
+### Remote upload
+
+It's possible to upload files remotely. Define this environment variables:
+* `BUILD_EXPORT_REMOTE_HOST` - remote host to copy directory to
+* `BUILD_EXPORT_REMOTE_USER` - host user to copy remote dir
+
+> Paths stay the same for remote upload like for local upload
+
 ## Installation
 
 ### Runner provision

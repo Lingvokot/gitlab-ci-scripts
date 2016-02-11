@@ -18,7 +18,8 @@ STATIC_BUILD_DIR="$STATIC_PROJECT_DIR/$BUILD_ID"
 
 # ENV VARS
 #
-# BUILD_EXPORT_HOST
+# BUILD_EXPORT_REMOTE_HOST - host to rsync exported directory
+# BUILD_EXPORT_REMOTE_USER - user to rsync exported directory
 
 # UTILS
 
@@ -100,15 +101,28 @@ img="$STATIC_BUILD_DIR/badge_maintainability.svg"
 echo "Curl to $URL, img path $img";
 curl -sS "$URL" > $img
 
-# REPLACE LATEST LINKS
+# Copy to remote server if user and host are specified
+if [ "$BUILD_EXPORT_REMOTE_USER" ] && [ "$BUILD_EXPORT_REMOTE_HOST" ]; then
+  echo "Copying $STATIC_BUILD_DIR at $BUILD_EXPORT_REMOTE_HOST..."
+  ssh $BUILD_EXPORT_REMOTE_USER@$BUILD_EXPORT_REMOTE_HOST "\"mkdir -p $STATIC_BUILD_DIR\""
+  scp $STATIC_BUILD_DIR $BUILD_EXPORT_REMOTE_USER@$BUILD_EXPORT_REMOTE_HOST:$STATIC_PROJECT_DIR
+  rm -rf $STATIC_BUILD_DIR
+fi
 
-echo "Replacing link on latest build..."
-unlink "$STATIC_PROJECT_DIR/latest"
-ln -s "$STATIC_BUILD_DIR" "$STATIC_PROJECT_DIR/latest"
+# REPLACE LATEST LINKS
+if [ "$BUILD_EXPORT_REMOTE_USER" ] && [ "$BUILD_EXPORT_REMOTE_HOST" ]; then
+  echo "Replacing link on latest build to $BUILD_ID at $BUILD_EXPORT_REMOTE_HOST..."
+  ssh $BUILD_EXPORT_REMOTE_USER@$BUILD_EXPORT_REMOTE_HOST "unlink \"$STATIC_PROJECT_DIR/latest\""
+  ssh $BUILD_EXPORT_REMOTE_USER@$BUILD_EXPORT_REMOTE_HOST "ln -s \"$STATIC_BUILD_DIR\" \"$STATIC_PROJECT_DIR/latest\""
+else
+  echo "Replacing link on latest build to $BUILD_ID..."
+  unlink "$STATIC_PROJECT_DIR/latest"
+  ln -s "$STATIC_BUILD_DIR" "$STATIC_PROJECT_DIR/latest"
+fi
 
 # ECHO LINK AT BOTTOM
 
-URL="http://$BUILD_EXPORT_HOST/$PROJECT_NAME/$BUILD_ID"
+URL="http://$BUILD_EXPORT_REMOTE_HOST/$PROJECT_NAME/$BUILD_ID"
 
 echo -e "\n\n\n"
 echo "========================================="
