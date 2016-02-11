@@ -18,7 +18,7 @@ STATIC_BUILD_DIR="$STATIC_PROJECT_DIR/$BUILD_ID"
 
 # ENV VARS
 #
-# BUILD_EXPORT_HOST
+# BUILD_EXPORT_REMOTE_HOST - host to rsync exported directory
 
 # UTILS
 
@@ -108,7 +108,7 @@ ln -s "$STATIC_BUILD_DIR" "$STATIC_PROJECT_DIR/latest"
 
 # ECHO LINK AT BOTTOM
 
-URL="http://$BUILD_EXPORT_HOST/$PROJECT_NAME/$BUILD_ID"
+URL="http://$BUILD_EXPORT_REMOTE_HOST/$PROJECT_NAME/$BUILD_ID"
 
 echo -e "\n\n\n"
 echo "========================================="
