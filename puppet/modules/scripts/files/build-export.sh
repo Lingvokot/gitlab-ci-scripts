@@ -19,6 +19,7 @@ STATIC_BUILD_DIR="$STATIC_PROJECT_DIR/$BUILD_ID"
 # ENV VARS
 #
 # BUILD_EXPORT_REMOTE_HOST - host to rsync exported directory
+# BUILD_EXPORT_REMOTE_USER - user to rsync exported directory
 
 # UTILS
 
@@ -99,6 +100,12 @@ URL="https://img.shields.io/badge/$subject-$status-$color.svg"
 img="$STATIC_BUILD_DIR/badge_maintainability.svg"
 echo "Curl to $URL, img path $img";
 curl -sS "$URL" > $img
+
+# Copy to remote server if user and host are specified
+if [ "$BUILD_EXPORT_REMOTE_USER" ] && [ "$BUILD_EXPORT_REMOTE_HOST" ]; then
+  echo "Copying $BUILD_DIR_PATH to $STATIC_BUILD_DIR at $BUILD_EXPORT_REMOTE_HOST..."
+  rsync -avz $BUILD_DIR_PATH $BUILD_EXPORT_REMOTE_USER@$BUILD_EXPORT_REMOTE_HOST:$STATIC_BUILD_DIR
+fi
 
 # REPLACE LATEST LINKS
 
