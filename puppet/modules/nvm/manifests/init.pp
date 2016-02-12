@@ -2,8 +2,18 @@ package { 'git':
   ensure => 'installed',
 }
 package { 'build-essential':
-  ensure => 'installed',
+  ensure => installed,
 }
+package { 'openssl':
+  ensure => installed,
+}
+package { 'libssl-dev':
+  ensure => installed,
+}
+package { 'curl':
+  ensure => installed,
+}
+
 exec { 'clone nvm repo':
   command => 'git clone git@github.com:creationix/nvm.git /opt/nvm',
   path => ["/bin", "/usr/bin", "/usr/sbin"],
