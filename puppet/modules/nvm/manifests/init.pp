@@ -15,7 +15,7 @@ package { 'curl':
 }
 
 exec { 'clone nvm repo':
-  command => 'git clone git@github.com:creationix/nvm.git /opt/nvm',
+  command => 'git clone https://github.com/creationix/nvm.git /opt/nvm',
   path => ["/bin", "/usr/bin", "/usr/sbin"],
 }
 file { ['/usr/local/nvm', ['/usr/local/node']]:
