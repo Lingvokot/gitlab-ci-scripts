@@ -21,6 +21,8 @@ exec { 'clone nvm repo':
 file { ['/usr/local/nvm', ['/usr/local/node']]:
   ensure => 'directory',
   mode => '755',
+  owner => 'gitlab-runner',
+  group => 'gitlab-runner',
 }
 
 file { '/etc/profile.d/nvm.sh':
