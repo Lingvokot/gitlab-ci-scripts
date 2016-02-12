@@ -30,6 +30,8 @@ It's possible to upload files remotely. Define this environment variables:
 
 ## Installation
 
+> It's possible to enable stdout of child commands with DEBUG env var: `DEBUG=y install.sh manifest`
+
 ### Runner provision
 
 Included in the `gitlab-runner` manifest:
