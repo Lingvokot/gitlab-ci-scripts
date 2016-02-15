@@ -118,7 +118,7 @@ fi
 
 # ECHO LINK AT BOTTOM
 
-URL="http://$BUILD_EXPORT_REMOTE_HOST/$PROJECT_NAME/$BUILD_ID"
+URL="http://$BUILD_EXPORT_REMOTE_HOST/builds/$PROJECT_NAME/$BUILD_ID"
 
 echo -e "\n\n\n"
 echo "========================================="
