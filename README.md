@@ -77,6 +77,8 @@ Now Gitlab CI will display covered lines percent:
 
 ![Istanbul coverage gitlab](assets/istanbul-coverage.png)
 
+> Also, for istanbul, this line may be helpful: `All files(?:\s*\|\s*\d+\s*){3}\|\s*((\d*\.?\d+))\s*\|`
+
 To enforce coverage percent, consult your coverage program.
 We use *istanbul* (and *isparta*), so we can check coverage with command `istanbul check`
 
