@@ -122,7 +122,6 @@ URL="http://$BUILD_EXPORT_REMOTE_HOST/builds/$PROJECT_NAME/$BUILD_ID"
 
 echo -e "\n\n\n"
 echo "========================================="
-echo "=== COPIED TO $URL/$TARGET_DIR_NAME  ==="
 echo "=== SEE YOUR BUILD DIR AT $URL  ==="
 echo "========================================="
 echo -e "\n\n\n"
