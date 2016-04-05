@@ -54,7 +54,7 @@ We use it as "Gitlab CI extension" for our *JavaScript* projects (*React Native*
 
 With help of `build-export.sh`, it's possible to:
   * generate custom badges via web service http://shields.io
-  * always have link on latest build
+  * always have link on latest build for *master* branch
   * copy your build artifacts to directory exposed into WEB by nginx!
 
 We use HTTP basic auth for access control. But badges are public-visible by default.

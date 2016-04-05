@@ -5,6 +5,7 @@
 BUILD_ID=$1
 BUILD_DIR_PATH=$2
 PROJECT_NAME=$3
+REF_NAME=$4
 
 
 # VARS
@@ -108,12 +109,16 @@ if [ "$BUILD_EXPORT_REMOTE_USER" ] && [ "$BUILD_EXPORT_REMOTE_HOST" ]; then
 fi
 
 # REPLACE LATEST LINKS
-if [ "$BUILD_EXPORT_REMOTE_USER" ] && [ "$BUILD_EXPORT_REMOTE_HOST" ]; then
-  echo "Replacing link on latest build to $BUILD_ID at $BUILD_EXPORT_REMOTE_HOST..."
-  ssh $BUILD_EXPORT_REMOTE_USER@$BUILD_EXPORT_REMOTE_HOST "ln -sf \"$STATIC_BUILD_DIR\" \"$STATIC_PROJECT_DIR/latest\""
+if [[ $REF_NAME = "master" ]]; then
+  if [ "$BUILD_EXPORT_REMOTE_USER" ] && [ "$BUILD_EXPORT_REMOTE_HOST" ]; then
+    echo "Replacing link on latest build to $BUILD_ID at $BUILD_EXPORT_REMOTE_HOST..."
+    ssh $BUILD_EXPORT_REMOTE_USER@$BUILD_EXPORT_REMOTE_HOST "ln -sf \"$STATIC_BUILD_DIR\" \"$STATIC_PROJECT_DIR/latest\""
+  else
+    echo "Replacing link on latest build to $BUILD_ID..."
+    ln -sf "$STATIC_BUILD_DIR" "$STATIC_PROJECT_DIR/latest"
+  fi
 else
-  echo "Replacing link on latest build to $BUILD_ID..."
-  ln -sf "$STATIC_BUILD_DIR" "$STATIC_PROJECT_DIR/latest"
+  echo "REF_NAME is not master. Skipping latest build link replace..."
 fi
 
 # ECHO LINK AT BOTTOM
