@@ -88,7 +88,7 @@ for report in "${reports[@]}"; do
         URL="https://img.shields.io/badge/$subject-$status-$color.svg"
         img="$STATIC_BUILD_DIR/badge_coverage.svg"
         echo "Curl to $URL, img path $img";
-        curl -sS "$URL" > $img4
+        curl -sS "$URL" > $img
       fi
       ;;
     "mochawesome-reports" )
@@ -124,7 +124,7 @@ for report in "${reports[@]}"; do
         URL="https://img.shields.io/badge/$subject-$status-$color.svg"
         img="$STATIC_BUILD_DIR/badge_tests.svg"
         echo "Curl to $URL, img path $img";
-        curl -sS "$URL" > $img4
+        curl -sS "$URL" > $img
       fi
       ;;
     "plato" )
@@ -158,7 +158,7 @@ for report in "${reports[@]}"; do
         URL="https://img.shields.io/badge/$subject-$status-$color.svg"
         img="$STATIC_BUILD_DIR/badge_maintainability.svg"
         echo "Curl to $URL, img path $img";
-        curl -sS "$URL" > $img4
+        curl -sS "$URL" > $img
       fi
       ;;
   esac
