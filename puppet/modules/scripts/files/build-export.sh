@@ -41,7 +41,12 @@ getcolor () {
 mkdir -p $STATIC_BUILD_DIR
 
 # reports with different badge logic
-reports=(coverage mochawesome-reports plato)
+str="`declare -p BUILD_EXPORT_REPORTERS 2>/dev/null`";
+if [[ "${str:0:10}" == 'declare -a' ]];then
+  reports=$BUILD_EXPORT_REPORTERS
+else
+  reports=(coverage mochawesome-reports plato)
+fi
 
 for report in "${reports[@]}"; do
 
