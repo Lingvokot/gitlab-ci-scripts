@@ -112,10 +112,12 @@ fi
 if [[ $REF_NAME = "master" ]]; then
   if [ "$BUILD_EXPORT_REMOTE_USER" ] && [ "$BUILD_EXPORT_REMOTE_HOST" ]; then
     echo "Replacing link on latest build to $BUILD_ID at $BUILD_EXPORT_REMOTE_HOST..."
-    ssh $BUILD_EXPORT_REMOTE_USER@$BUILD_EXPORT_REMOTE_HOST "ln -sf \"$STATIC_BUILD_DIR\" \"$STATIC_PROJECT_DIR/latest\""
+    ssh $BUILD_EXPORT_REMOTE_USER@$BUILD_EXPORT_REMOTE_HOST "unlink \"$STATIC_PROJECT_DIR/latest\""
+    ssh $BUILD_EXPORT_REMOTE_USER@$BUILD_EXPORT_REMOTE_HOST "ln -s \"$STATIC_BUILD_DIR\" \"$STATIC_PROJECT_DIR/latest\""
   else
     echo "Replacing link on latest build to $BUILD_ID..."
-    ln -sf "$STATIC_BUILD_DIR" "$STATIC_PROJECT_DIR/latest"
+    unlink "$STATIC_PROJECT_DIR/latest"
+    ln -s "$STATIC_BUILD_DIR" "$STATIC_PROJECT_DIR/latest"
   fi
 else
   echo "REF_NAME is not master. Skipping latest build link replace..."
