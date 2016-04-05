@@ -67,7 +67,7 @@ for report in "${reports[@]}"; do
         cd $BUILD_DIR_PATH
 
         coverage=`./node_modules/.bin/istanbul report text-summary | grep "Lines" | grep -oE "(([0-9]+.)?[0-9]+)%" | sed 's/%//'`
-        coverage_rounded=$(awk "BEGIN { pc=100*${coverage}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
+        coverage_rounded=$(awk "BEGIN{printf \"%3.0f\n\", ${coverage}}")
 
         subject="Coverage"
         status=$coverage_rounded
@@ -137,7 +137,7 @@ for report in "${reports[@]}"; do
         cd $BUILD_DIR_PATH
 
         maintainability=`grep -oE '"maintainability":"(([0-9]+.)?[0-9]+)"' plato/report.json | grep -oE "(([0-9]+.)?[0-9]+)"`
-        maintainability_rounded=$(awk "BEGIN { pc=${maintainability}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
+        maintainability_rounded=$(awk "BEGIN{printf \"%3.0f\n\", ${maintainability}}")
 
         subject="Maintainability"
         status=$maintainability
