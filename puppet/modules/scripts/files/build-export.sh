@@ -56,10 +56,11 @@ done
 cd $BUILD_DIR_PATH
 
 coverage=`./node_modules/.bin/istanbul report text-summary | grep "Lines" | grep -oE "(([0-9]+.)?[0-9]+)%" | sed 's/%//'`
+coverage_rounded=$(awk "BEGIN { pc=100*${coverage}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
 
 subject="Coverage"
-status=$coverage
-color=$(getcolor $coverage)
+status=$coverage_rounded
+color=$(getcolor $coverage_rounded)
 
 URL="https://img.shields.io/badge/$subject-$status-$color.svg"
 img="$STATIC_BUILD_DIR/badge_coverage.svg"
