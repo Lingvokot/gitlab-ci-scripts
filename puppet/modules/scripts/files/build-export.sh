@@ -40,66 +40,125 @@ getcolor () {
 # ensure dir exists
 mkdir -p $STATIC_BUILD_DIR
 
-# copy HTML reports
-dirs=(coverage mochawesome-reports plato)
-for dir in "${dirs[@]}"
-do
-  from="$BUILD_DIR_PATH/$dir"
-  to="$STATIC_BUILD_DIR/$dir"
-  echo "Copying $from to $to..."
-  cp -rf $from $to
+# reports with different badge logic
+reports=(coverage mochawesome-reports plato)
+
+for report in "${reports[@]}"; do
+
+  from="$BUILD_DIR_PATH/$report"
+  to="$STATIC_BUILD_DIR/$report"
+
+  echo "Processing $report..."
+
+  # Process one-by-one
+  case $report in
+    "coverage" )
+      if [[ -d $from ]]; then
+        echo "Copying $from to $to..."
+        cp -r $from $to
+
+        # COVERAGE BADGE
+
+        cd $BUILD_DIR_PATH
+
+        coverage=`./node_modules/.bin/istanbul report text-summary | grep "Lines" | grep -oE "(([0-9]+.)?[0-9]+)%" | sed 's/%//'`
+        coverage_rounded=$(awk "BEGIN { pc=100*${coverage}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
+
+        subject="Coverage"
+        status=$coverage_rounded
+        color=$(getcolor $coverage_rounded)
+
+        URL="https://img.shields.io/badge/$subject-$status-$color.svg"
+        img="$STATIC_BUILD_DIR/badge_coverage.svg"
+        echo "Curl to $URL, img path $img";
+        curl -sS "$URL" > $img
+
+      else
+        echo "No directory found for $report..."
+
+        subject="Coverage"
+        status="Fail"
+        color="lightgrey"
+
+        URL="https://img.shields.io/badge/$subject-$status-$color.svg"
+        img="$STATIC_BUILD_DIR/badge_coverage.svg"
+        echo "Curl to $URL, img path $img";
+        curl -sS "$URL" > $img4
+      fi
+      ;;
+    "mochawesome-reports" )
+      if [[ -d $from ]]; then
+        echo "Copying $from to $to..."
+        cp -r $from $to
+
+        # TEST CASES BADGE
+
+        cd $BUILD_DIR_PATH
+
+        tests=`cat mochawesome-reports/mochawesome.json| grep -h '"tests": ' | grep -oE "[0-9]+"`
+        passed=`cat mochawesome-reports/mochawesome.json| grep -h '"passes": ' | grep -oE "[0-9]+"`
+
+        tests_passed=$(awk "BEGIN { pc=100*${passed}/${tests}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
+
+        subject="Tests passed"
+        status="$passed/$tests"
+        color=$(getcolor $tests_passed)
+
+        URL="https://img.shields.io/badge/$subject-$status-$color.svg"
+        img="$STATIC_BUILD_DIR/badge_tests.svg"
+        echo "Curl to $URL, img path $img";
+        curl -sS "$URL" > $img
+
+      else
+        echo "No directory found for $report..."
+
+        subject="Tests passed"
+        status="Fail"
+        color="lightgrey"
+
+        URL="https://img.shields.io/badge/$subject-$status-$color.svg"
+        img="$STATIC_BUILD_DIR/badge_tests.svg"
+        echo "Curl to $URL, img path $img";
+        curl -sS "$URL" > $img4
+      fi
+      ;;
+    "plato" )
+      if [[ -d $from ]]; then
+        echo "Copying $from to $to..."
+        cp -r $from $to
+
+        # MAINTAINABLITY BADGE
+
+        cd $BUILD_DIR_PATH
+
+        maintainability=`grep -oE '"maintainability":"(([0-9]+.)?[0-9]+)"' plato/report.json | grep -oE "(([0-9]+.)?[0-9]+)"`
+        maintainability_rounded=$(awk "BEGIN { pc=${maintainability}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
+
+        subject="Maintainability"
+        status=$maintainability
+        color=$(getcolor $maintainability_rounded)
+
+        URL="https://img.shields.io/badge/$subject-$status-$color.svg"
+        img="$STATIC_BUILD_DIR/badge_maintainability.svg"
+        echo "Curl to $URL, img path $img";
+        curl -sS "$URL" > $img
+
+      else
+        echo "No directory found for $report..."
+
+        subject="Maintainability"
+        status="Fail"
+        color="lightgrey"
+
+        URL="https://img.shields.io/badge/$subject-$status-$color.svg"
+        img="$STATIC_BUILD_DIR/badge_maintainability.svg"
+        echo "Curl to $URL, img path $img";
+        curl -sS "$URL" > $img4
+      fi
+      ;;
+  esac
+
 done
-
-
-# COVERAGE BADGE
-
-cd $BUILD_DIR_PATH
-
-coverage=`./node_modules/.bin/istanbul report text-summary | grep "Lines" | grep -oE "(([0-9]+.)?[0-9]+)%" | sed 's/%//'`
-coverage_rounded=$(awk "BEGIN { pc=100*${coverage}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
-
-subject="Coverage"
-status=$coverage_rounded
-color=$(getcolor $coverage_rounded)
-
-URL="https://img.shields.io/badge/$subject-$status-$color.svg"
-img="$STATIC_BUILD_DIR/badge_coverage.svg"
-echo "Curl to $URL, img path $img";
-curl -sS "$URL" > $img
-
-# TEST CASES BADGE
-
-cd $BUILD_DIR_PATH
-
-tests=`cat mochawesome-reports/mochawesome.json| grep -h '"tests": ' | grep -oE "[0-9]+"`
-passed=`cat mochawesome-reports/mochawesome.json| grep -h '"passes": ' | grep -oE "[0-9]+"`
-
-tests_passed=$(awk "BEGIN { pc=100*${passed}/${tests}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
-
-subject="Tests passed"
-status="$passed/$tests"
-color=$(getcolor $tests_passed)
-
-URL="https://img.shields.io/badge/$subject-$status-$color.svg"
-img="$STATIC_BUILD_DIR/badge_tests.svg"
-echo "Curl to $URL, img path $img";
-curl -sS "$URL" > $img
-
-# MAINTAINABLITY BADGE
-
-cd $BUILD_DIR_PATH
-
-maintainability=`grep -oE '"maintainability":"(([0-9]+.)?[0-9]+)"' plato/report.json | grep -oE "(([0-9]+.)?[0-9]+)"`
-maintainability_rounded=$(awk "BEGIN { pc=${maintainability}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
-
-subject="Maintainability"
-status=$maintainability
-color=$(getcolor $maintainability_rounded)
-
-URL="https://img.shields.io/badge/$subject-$status-$color.svg"
-img="$STATIC_BUILD_DIR/badge_maintainability.svg"
-echo "Curl to $URL, img path $img";
-curl -sS "$URL" > $img
 
 # Copy to remote server if user and host are specified
 if [ "$BUILD_EXPORT_REMOTE_USER" ] && [ "$BUILD_EXPORT_REMOTE_HOST" ]; then
