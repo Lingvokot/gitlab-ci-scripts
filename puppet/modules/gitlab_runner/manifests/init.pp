@@ -28,6 +28,16 @@ class gitlab_runner (
     hasstatus  => true,
   }
 
+  file { '/etc/profile.d/build_export.sh':
+    ensure => 'file',
+    content => '
+# Correct this as you wish
+#export BUILD_EXPORT_SCRIPT="/home/gitlab-runner/build-export.sh"
+#export BUILD_EXPORT_REMOTE_HOST="127.0.0.1"
+#export BUILD_EXPORT_REMOTE_USER="build-export-user-here"
+    ',
+  }
+
 #   exec { 'register runner':
 #     command => "gitlab-ci-multi-runner register \
 # --non-interactive \

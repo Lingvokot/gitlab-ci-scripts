@@ -35,3 +35,13 @@ export ANDROID_PLATFORM_TOOLS=$ANDROID_HOME/platform-tools
 export PATH="$ANDROID_TOOLS_PATH:$ANDROID_PLATFORM_TOOLS:$PATH"
   ',
 }
+
+file { '/etc/profile.d/android_secrets.sh':
+  ensure => 'file',
+  content => '
+# Correct this as you wish
+#export SUPPLY_KEY="/path/to/file.p12"
+#export ANDROID_KEYSTORE="/path/to/keystore.jks"
+#export ANDROID_KEYSTORE_PASSWORD="keystore password"
+  ',
+}

@@ -31,5 +31,7 @@ file { '/etc/profile.d/nvm.sh':
   content => '
 export NVM_DIR=/usr/local/nvm
 source /opt/nvm/nvm.sh
+
+export PATH="/usr/local/node/bin:$PATH"
   ',
 }
