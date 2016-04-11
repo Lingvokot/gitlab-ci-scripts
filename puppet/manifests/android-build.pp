@@ -11,6 +11,16 @@ class { 'jdk':
 
 include android
 
+exec { 'update android':
+  command => 'echo yes | android update sdk --all --filter tools --no-ui --force > /dev/null',
+  path => ["/bin", "/usr/bin", "/usr/sbin", "/usr/local/android/android-sdk-linux/tools/"],
+}
+
+exec { 'install android build tools':
+  command => 'echo yes | android update sdk -u -a -t 2,5,33,105,136,137 --no-ui --force > /dev/null',
+  path => ["/bin", "/usr/bin", "/usr/sbin", "/usr/local/android/android-sdk-linux/tools/"],
+}
+
 class { 'fastlane':
 
 }
