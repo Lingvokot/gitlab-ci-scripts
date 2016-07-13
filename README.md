@@ -89,3 +89,9 @@ istanbul check --lines 90
 
 To enforce code style on your build server, use linter.
 We use `1` option for some rules in our *.eslintrc*.
+
+# Create Merge Request on Gitlab in command line
+
+I've created this small script, and it *actually* works.
+You need Ruby and Bash to use it.
+It's on Gist: https://gist.github.com/ColCh/35c495786e25e33976706016eed7f200
